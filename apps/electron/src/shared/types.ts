@@ -501,6 +501,7 @@ export const IPC_CHANNELS = {
   READ_FILE_ATTACHMENT: 'file:readAttachment',
   STORE_ATTACHMENT: 'file:storeAttachment',
   GENERATE_THUMBNAIL: 'file:generateThumbnail',
+  SAVE_RESPONSE: 'file:saveResponse',  // Save agent response to working directory
 
   // Filesystem search (for @ mention file selection)
   FS_SEARCH: 'fs:search',
@@ -722,6 +723,7 @@ export interface ElectronAPI {
   readFileAttachment(path: string): Promise<FileAttachment | null>
   storeAttachment(sessionId: string, attachment: FileAttachment): Promise<import('../../../../packages/core/src/types/index.ts').StoredAttachment>
   generateThumbnail(base64: string, mimeType: string): Promise<string | null>
+  saveResponse(workingDirectory: string, sessionName: string, content: string, responseTimestamp: number): Promise<{ success: boolean; filePath?: string; error?: string }>
 
   // Filesystem search (for @ mention file selection)
   searchFiles(basePath: string, query: string): Promise<FileSearchResult[]>

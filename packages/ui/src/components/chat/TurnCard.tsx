@@ -19,6 +19,7 @@ import {
   ListTodo,
   Pencil,
   FilePenLine,
+  Save,
 } from 'lucide-react'
 import * as ReactDOM from 'react-dom'
 import { cn } from '../../lib/utils'
@@ -177,6 +178,8 @@ export interface TurnCardProps {
   onOpenUrl?: (url: string) => void
   /** Callback to open response in Monaco editor */
   onPopOut?: (text: string) => void
+  /** Callback to save response to working directory. Returns true if save succeeded. */
+  onSaveResponse?: (text: string, responseTimestamp: number) => Promise<boolean>
   /** Callback to open turn details in a new window */
   onOpenDetails?: () => void
   /** Callback to open individual activity details in Monaco */
@@ -1000,6 +1003,8 @@ export interface ResponseCardProps {
   onOpenUrl?: (url: string) => void
   /** Callback to open response in Monaco editor */
   onPopOut?: () => void
+  /** Callback to save response to working directory. Returns true if save succeeded. */
+  onSaveResponse?: () => Promise<boolean>
   /** Card variant - 'response' for AI messages, 'plan' for plan messages */
   variant?: 'response' | 'plan'
   /** Callback when user accepts the plan (plan variant only) */
@@ -1035,6 +1040,7 @@ export function ResponseCard({
   onOpenFile,
   onOpenUrl,
   onPopOut,
+  onSaveResponse,
   variant = 'response',
   onAccept,
   onAcceptWithCompact,
@@ -1046,6 +1052,8 @@ export function ResponseCard({
   const lastUpdateRef = useRef(Date.now())
   // Copy to clipboard state
   const [copied, setCopied] = useState(false)
+  // Save to file state
+  const [saved, setSaved] = useState(false)
   // Fullscreen state
   const [isFullscreen, setIsFullscreen] = useState(false)
   // Dark mode detection - scroll fade only shown in dark mode
@@ -1073,6 +1081,16 @@ export function ResponseCard({
       console.error('Failed to copy:', err)
     }
   }, [text])
+
+  const handleSave = useCallback(async () => {
+    if (onSaveResponse) {
+      const success = await onSaveResponse()
+      if (success) {
+        setSaved(true)
+        setTimeout(() => setSaved(false), 2000)
+      }
+    }
+  }, [onSaveResponse])
 
   // Throttle content updates during streaming for performance
   // Updates immediately when streaming ends to show final content
@@ -1209,6 +1227,28 @@ export function ResponseCard({
                 >
                   <ExternalLink className={SIZE_CONFIG.iconSize} />
                   <span>View as Markdown</span>
+                </button>
+              )}
+              {onSaveResponse && (
+                <button
+                  onClick={handleSave}
+                  className={cn(
+                    "flex items-center gap-1.5 transition-colors select-none",
+                    saved ? "text-success" : "text-muted-foreground hover:text-foreground",
+                    "focus:outline-none focus-visible:underline"
+                  )}
+                >
+                  {saved ? (
+                    <>
+                      <Check className={SIZE_CONFIG.iconSize} />
+                      <span>Saved!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className={SIZE_CONFIG.iconSize} />
+                      <span>Save</span>
+                    </>
+                  )}
                 </button>
               )}
             </div>
@@ -1390,6 +1430,7 @@ export const TurnCard = React.memo(function TurnCard({
   onOpenFile,
   onOpenUrl,
   onPopOut,
+  onSaveResponse,
   onOpenDetails,
   onOpenActivityDetails,
   onOpenMultiFileDiff,
@@ -1685,6 +1726,7 @@ export const TurnCard = React.memo(function TurnCard({
             onOpenFile={onOpenFile}
             onOpenUrl={onOpenUrl}
             onPopOut={onPopOut ? () => onPopOut(response.text) : undefined}
+            onSaveResponse={onSaveResponse ? () => onSaveResponse(response.text, response.streamStartTime || Date.now()) : undefined}
             variant={response.isPlan ? 'plan' : 'response'}
             onAccept={onAcceptPlan}
             onAcceptWithCompact={onAcceptPlanWithCompact}

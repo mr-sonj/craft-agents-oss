@@ -706,6 +706,28 @@ export function ChatDisplay({
                         todos={turn.todos}
                         onOpenFile={onOpenFile}
                         onOpenUrl={onOpenUrl}
+                        onSaveResponse={workingDirectory ? async (text, responseTimestamp) => {
+                          try {
+                            const result = await window.electronAPI.saveResponse(
+                              workingDirectory,
+                              session.name || 'response',
+                              text,
+                              responseTimestamp
+                            )
+                            if (result.success && result.filePath) {
+                              // Could show a toast notification here in the future
+                              console.log('Response saved to:', result.filePath)
+                              return true
+                            } else if (result.error) {
+                              console.error('Failed to save response:', result.error)
+                              return false
+                            }
+                            return false
+                          } catch (err) {
+                            console.error('Failed to save response:', err)
+                            return false
+                          }
+                        } : undefined}
                         isLastResponse={isLastResponse}
                         onAcceptPlan={() => {
                           window.dispatchEvent(new CustomEvent('craft:approve-plan', {
