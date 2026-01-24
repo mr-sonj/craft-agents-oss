@@ -609,7 +609,7 @@ export function groupMessagesByTurn(messages: Message[]): Turn[] {
       currentTurn.response = {
         text: message.content,
         isStreaming: !!message.isStreaming,
-        streamStartTime: message.isStreaming ? message.timestamp : undefined,
+        streamStartTime: message.timestamp,
       }
       currentTurn.isStreaming = !!message.isStreaming
       currentTurn.isComplete = !message.isStreaming
