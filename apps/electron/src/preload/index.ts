@@ -68,6 +68,8 @@ const api: ElectronAPI = {
   readFileAttachment: (path: string) => ipcRenderer.invoke(IPC_CHANNELS.READ_FILE_ATTACHMENT, path),
   storeAttachment: (sessionId: string, attachment: FileAttachment) => ipcRenderer.invoke(IPC_CHANNELS.STORE_ATTACHMENT, sessionId, attachment),
   generateThumbnail: (base64: string, mimeType: string) => ipcRenderer.invoke(IPC_CHANNELS.GENERATE_THUMBNAIL, base64, mimeType),
+  saveResponse: (workingDirectory: string, sessionName: string, content: string, responseTimestamp: number) =>
+    ipcRenderer.invoke(IPC_CHANNELS.SAVE_RESPONSE, workingDirectory, sessionName, content, responseTimestamp),
 
   // Theme
   getSystemTheme: () => ipcRenderer.invoke(IPC_CHANNELS.GET_SYSTEM_THEME),

@@ -534,6 +534,40 @@ export function registerIpcHandlers(sessionManager: SessionManager, windowManage
     }
   })
 
+  // Save agent response to working directory as markdown file
+  // Uses response timestamp (when AI responded) for unique filename
+  ipcMain.handle(
+    IPC_CHANNELS.SAVE_RESPONSE,
+    async (_event, workingDirectory: string, sessionName: string, content: string, responseTimestamp: number): Promise<{ success: boolean; filePath?: string; error?: string }> => {
+      try {
+        // Sanitize session name for use as filename
+        const sanitizedName = sessionName
+          .replace(/[<>:"/\\|?*\x00-\x1F]/g, '') // Remove invalid chars
+          .replace(/\s+/g, '-') // Replace spaces with dashes
+          .replace(/-+/g, '-') // Collapse multiple dashes
+          .replace(/^-|-$/g, '') // Trim leading/trailing dashes
+          .slice(0, 100) // Limit length
+          || 'response' // Fallback if name becomes empty
+
+        // Use response timestamp for filename (when AI responded)
+        const date = new Date(responseTimestamp)
+        const timestamp = date.toISOString().replace(/[:.]/g, '-').slice(0, 19)
+        const fileName = `${sanitizedName}-${timestamp}.md`
+        const filePath = join(workingDirectory, fileName)
+
+        // Write the file
+        await writeFile(filePath, content, 'utf-8')
+        ipcLog.info('Saved response to:', filePath)
+
+        return { success: true, filePath }
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Unknown error'
+        ipcLog.error('saveResponse error:', message)
+        return { success: false, error: message }
+      }
+    }
+  )
+
   // Store an attachment to disk and generate thumbnail/markdown conversion
   // This is the core of the persistent file attachment system
   ipcMain.handle(IPC_CHANNELS.STORE_ATTACHMENT, async (event, sessionId: string, attachment: FileAttachment): Promise<StoredAttachment> => {
