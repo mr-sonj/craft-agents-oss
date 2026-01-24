@@ -706,13 +706,16 @@ export function ChatDisplay({
                         todos={turn.todos}
                         onOpenFile={onOpenFile}
                         onOpenUrl={onOpenUrl}
-                        onSaveResponse={workingDirectory ? async (text, responseTimestamp) => {
+                        onSaveResponse={workingDirectory ? async (text, _responseTimestamp) => {
                           try {
+                            // Use turn.timestamp instead of responseTimestamp from TurnCard
+                            // turn.timestamp is always set correctly, while response.streamStartTime
+                            // may be undefined for completed responses
                             const result = await window.electronAPI.saveResponse(
                               workingDirectory,
                               session.name || 'response',
                               text,
-                              responseTimestamp
+                              turn.timestamp
                             )
                             if (result.success && result.filePath) {
                               // Could show a toast notification here in the future
