@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * Cross-platform resources copy script
  */
@@ -18,11 +17,3 @@ if (existsSync(srcDir)) {
 } else {
   console.log("⚠️ No resources directory found");
 }
-=======
-#!/usr/bin/env bun
-import { $ } from 'bun';
-
-console.log('📦 Copying Electron resources...');
-await $`cd apps/electron && bun run build:resources && bun run build:assets`;
-console.log('✅ Resources copied successfully');
->>>>>>> 00abdf0 (feat: update git workflow documentation and enhance sync scripts for better handling of dependencies and conflicts)

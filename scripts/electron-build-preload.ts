@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * Cross-platform preload build script with verification
  */
@@ -120,11 +119,3 @@ async function main(): Promise<void> {
 }
 
 main();
-=======
-#!/usr/bin/env bun
-import { $ } from 'bun';
-
-console.log('🔨 Building Electron preload script...');
-await $`cd apps/electron && bun run build:preload`;
-console.log('✅ Preload script built successfully');
->>>>>>> 00abdf0 (feat: update git workflow documentation and enhance sync scripts for better handling of dependencies and conflicts)

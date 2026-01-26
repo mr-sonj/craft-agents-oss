@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * Cross-platform electron dev script
  * Replaces platform-specific npm scripts with a unified TypeScript solution
@@ -426,10 +425,3 @@ main().catch((err) => {
   console.error("❌ Error:", err);
   process.exit(1);
 });
-=======
-#!/usr/bin/env bun
-import { $ } from 'bun';
-
-console.log('🚀 Starting Electron in development mode...');
-await $`cd apps/electron && bun run dev`;
->>>>>>> 00abdf0 (feat: update git workflow documentation and enhance sync scripts for better handling of dependencies and conflicts)
