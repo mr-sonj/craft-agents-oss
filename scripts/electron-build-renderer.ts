@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * Cross-platform renderer build script
  */
@@ -24,3 +25,11 @@ const proc = spawn({
 
 const exitCode = await proc.exited;
 process.exit(exitCode);
+=======
+#!/usr/bin/env bun
+import { $ } from 'bun';
+
+console.log('🔨 Building Electron renderer process...');
+await $`cd apps/electron && bun run build:renderer`;
+console.log('✅ Renderer process built successfully');
+>>>>>>> 00abdf0 (feat: update git workflow documentation and enhance sync scripts for better handling of dependencies and conflicts)

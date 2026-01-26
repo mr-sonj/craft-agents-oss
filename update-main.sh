@@ -31,8 +31,5 @@ if git stash list | grep -q "auto-stash before update"; then
     git stash pop || echo "⚠️  Có conflict khi apply stash, vui lòng kiểm tra git stash list"
 fi
 
-# Bước 7: Cập nhật dependencies
-echo "📦 Cập nhật dependencies..."
-bun install
-
 echo "✅ Hoàn tất! Nhánh main đã được cập nhật từ upstream."
+echo "💡 Lưu ý: Chuyển sang nhánh 'my' để dev/test (chạy ./sync-my.sh để đồng bộ)"

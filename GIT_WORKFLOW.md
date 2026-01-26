@@ -2,8 +2,16 @@
 
 ## Cấu trúc nhánh
 
-- **`main`**: Nhánh sạch, đồng bộ với upstream (repo gốc). KHÔNG commit trực tiếp.
-- **`my`**: Nhánh phát triển tính năng, tùy biến cá nhân.
+- **`main`**: Nhánh sạch, đồng bộ với upstream (repo gốc).
+  - ❌ KHÔNG commit trực tiếp
+  - ❌ KHÔNG dev/test ở đây
+  - ❌ KHÔNG cần `bun install`
+  - ✅ Chỉ sync với upstream và để yên
+
+- **`my`**: Nhánh phát triển - nơi bạn làm mọi thứ.
+  - ✅ Dev, test, commit thoải mái
+  - ✅ Chạy `bun install` và build ở đây
+  - ✅ Tất cả tính năng custom của bạn
 
 ## Thiết lập ban đầu (chỉ làm 1 lần)
 
@@ -40,12 +48,11 @@ git rebase upstream/main
 
 # Bước 5: Đẩy lên fork của bạn
 git push origin main
-
-# Bước 6: Cập nhật dependencies
-bun install
 ```
 
 **Hoàn tất!** Nhánh `main` của bạn đã đồng bộ với code gốc.
+
+**Lưu ý:** Không cần `bun install` hay dev/test ở `main`. Chỉ sync và để yên!
 
 ```bash
 # Chuyển sang nhánh my
