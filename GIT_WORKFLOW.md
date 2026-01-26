@@ -91,11 +91,45 @@ git rebase main
 git push -f origin my
 ```
 
-## Chia sẻ tính năng về repo gốc
+## Chia sẻ tính năng về repo gốc (Pull Request)
 
-1. Từ GitHub fork của bạn
-2. Tạo Pull Request: `origin/my` → `upstream/main`
+### Tạo feature branch cho tính năng mới
+
+```bash
+# Từ nhánh my, tạo feature branch
+git checkout -b feature-ten-tinh-nang
+
+# Code và commit tính năng
+git add .
+git commit -m "feat: mô tả tính năng"
+
+# Đẩy lên fork
+git push origin feature-ten-tinh-nang
+```
+
+### Tạo Pull Request
+
+1. Vào GitHub fork của bạn
+2. Tạo Pull Request: `origin/feature-ten-tinh-nang` → `upstream/main`
 3. Mô tả rõ tính năng và cách test
+
+### ❓ Main đã update, feature branch có cần update không?
+
+**KHÔNG cần!** Giữ nguyên version code lúc tạo feature.
+
+**Chỉ update feature khi:**
+- ❗ Maintainer yêu cầu rebase (có conflict)
+- ❗ Feature phát triển lâu (>1 tháng) → nên test với code mới
+- ❗ Feature phụ thuộc code mới trong main
+
+**Cách update feature với main mới (khi cần):**
+
+```bash
+git checkout feature-ten-tinh-nang
+git fetch origin
+git rebase origin/main
+git push -f origin feature-ten-tinh-nang
+```
 
 ---
 
